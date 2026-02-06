@@ -1,0 +1,243 @@
+/* Custom styles for CPU Scheduling Visualizer */
+
+/* Smooth scrollbar for dark theme */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #1a1a2e;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #374151;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #4b5563;
+}
+
+/* Gantt chart block styles */
+.gantt-block {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-width: 50px;
+  height: 60px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 14px;
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  animation: bounceIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  opacity: 0;
+  transform: scale(0.8) translateY(10px);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Shimmer effect on entry */
+.gantt-block::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg,
+      transparent,
+      rgba(255, 255, 255, 0.2),
+      transparent);
+  animation: shimmer 0.8s ease-out forwards;
+  animation-delay: inherit;
+}
+
+.gantt-block:hover {
+  transform: translateY(-4px) scale(1.02);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+}
+
+/* Pulse glow effect for active process */
+.gantt-block.pulse-glow {
+  animation: bounceIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards,
+    pulseGlow 1.5s ease-in-out;
+}
+
+@keyframes bounceIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.3) translateY(20px);
+  }
+
+  50% {
+    opacity: 1;
+    transform: scale(1.05) translateY(-5px);
+  }
+
+  70% {
+    transform: scale(0.95) translateY(2px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    left: -100%;
+  }
+
+  100% {
+    left: 100%;
+  }
+}
+
+@keyframes pulseGlow {
+
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(233, 69, 96, 0);
+  }
+
+  50% {
+    box-shadow: 0 0 20px 5px rgba(233, 69, 96, 0.5);
+  }
+}
+
+.gantt-idle {
+  background: repeating-linear-gradient(45deg,
+      #374151,
+      #374151 5px,
+      #4b5563 5px,
+      #4b5563 10px);
+  color: #9ca3af;
+}
+
+/* Process colors palette */
+.process-color-0 {
+  background: linear-gradient(135deg, #e94560, #ff6b8a);
+}
+
+.process-color-1 {
+  background: linear-gradient(135deg, #00d4ff, #0099cc);
+}
+
+.process-color-2 {
+  background: linear-gradient(135deg, #7b2cbf, #9d4edd);
+}
+
+.process-color-3 {
+  background: linear-gradient(135deg, #06d6a0, #0ead89);
+}
+
+.process-color-4 {
+  background: linear-gradient(135deg, #ffd166, #f4a261);
+}
+
+.process-color-5 {
+  background: linear-gradient(135deg, #ef476f, #ff758f);
+}
+
+.process-color-6 {
+  background: linear-gradient(135deg, #118ab2, #26c6da);
+}
+
+.process-color-7 {
+  background: linear-gradient(135deg, #073b4c, #0d5c63);
+}
+
+/* Timeline markers */
+.timeline-marker {
+  min-width: 50px;
+  text-align: center;
+  font-size: 12px;
+  color: #9ca3af;
+  padding-top: 4px;
+  border-left: 1px dashed #374151;
+}
+
+.timeline-marker:first-child {
+  border-left: none;
+}
+
+/* Process queue chips */
+.process-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border-radius: 9999px;
+  font-size: 14px;
+  font-weight: 500;
+  background: linear-gradient(135deg, #1f4068, #16213e);
+  border: 1px solid #374151;
+  transition: all 0.2s ease;
+}
+
+.process-chip:hover {
+  border-color: #e94560;
+  transform: scale(1.02);
+}
+
+.process-chip .delete-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: rgba(239, 68, 68, 0.2);
+  color: #ef4444;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.process-chip .delete-btn:hover {
+  background: #ef4444;
+  color: white;
+}
+
+/* Table row hover effect */
+#results-table-body tr {
+  transition: background 0.2s ease;
+}
+
+#results-table-body tr:hover {
+  background: rgba(31, 64, 104, 0.3);
+}
+
+/* Pulse animation for status indicators */
+@keyframes pulse {
+
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.animate-pulse {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* Responsive adjustments */
+@media (max-width: 640px) {
+  .gantt-block {
+    min-width: 40px;
+    height: 50px;
+    font-size: 12px;
+  }
+
+  .timeline-marker {
+    min-width: 40px;
+    font-size: 10px;
+  }
+}
