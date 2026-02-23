@@ -4,9 +4,13 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>CPU Scheduling Visualiser</title>
+  <title>CPU Scheduling Visualizer | Interactive OS Algorithm Simulator</title>
   <meta name="description"
-    content="Interactive CPU Scheduling algorithm visualizer with Gantt charts for FCFS, SJF, Round Robin, and Priority scheduling." />
+    content="Interactive CPU Scheduling algorithm visualizer with beautiful Gantt charts for FCFS, SJF, Round Robin, Priority, and MLQ scheduling algorithms." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+    rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
@@ -15,97 +19,121 @@
         extend: {
           colors: {
             dark: {
-              900: '#0d0d0d',
-              800: '#1a1a2e',
-              700: '#16213e',
-              600: '#1f4068',
+              950: '#0a0a0f',
+              900: '#0d0d14',
+              800: '#12121a',
+              700: '#1a1a25',
+              600: '#252532',
             },
             accent: {
-              primary: '#e94560',
-              secondary: '#00d4ff',
-              tertiary: '#7b2cbf',
+              purple: '#8b5cf6',
+              pink: '#ec4899',
+              cyan: '#06b6d4',
+              emerald: '#10b981',
+              amber: '#f59e0b',
+              rose: '#f43f5e',
             }
           },
           fontFamily: {
             sans: ['Inter', 'system-ui', 'sans-serif'],
+          },
+          animation: {
+            'float': 'float 6s ease-in-out infinite',
           }
         }
       }
     }
   </script>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/src/style.css">
 </head>
 
-<body class="bg-dark-900 text-gray-100 font-sans min-h-screen">
+<body class="bg-dark-950 text-gray-100 font-sans min-h-screen overflow-x-hidden">
+  <!-- Decorative Orbs -->
+  <div class="floating-orb orb-1"></div>
+  <div class="floating-orb orb-2"></div>
+
   <!-- Header -->
-  <header class="bg-dark-800/80 backdrop-blur-md border-b border-dark-600/50 sticky top-0 z-50">
-    <div class="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
-      <div class="flex items-center gap-3">
-        <div
-          class="w-10 h-10 rounded-xl bg-gradient-to-br from-accent-primary to-accent-tertiary flex items-center justify-center">
+  <header class="header-glass sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+      <div class="flex items-center gap-4">
+        <div class="logo-container">
           <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
               d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z" />
           </svg>
         </div>
-        <h1
-          class="text-xl font-bold bg-gradient-to-r from-accent-primary to-accent-secondary bg-clip-text text-transparent">
-          CPU Scheduling Visualizer
-        </h1>
+        <div>
+          <h1 class="logo-title">CPU Scheduler</h1>
+          <p class="text-xs text-zinc-500">Interactive Visualization</p>
+        </div>
       </div>
       <a href="https://github.com/MR-Seven-7/cpu-scheduling-visualizer" target="_blank"
-        class="text-gray-400 hover:text-white transition-colors">
-        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+        class="flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 text-zinc-400 hover:text-white hover:border-accent-purple/50 hover:bg-accent-purple/10 transition-all duration-300">
+        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
           <path fill-rule="evenodd"
             d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"
             clip-rule="evenodd" />
         </svg>
+        <span class="text-sm font-medium hidden sm:inline">GitHub</span>
       </a>
     </div>
   </header>
 
   <!-- Main Content -->
-  <main class="max-w-7xl mx-auto px-4 py-8">
+  <main class="max-w-7xl mx-auto px-6 py-10">
+    <!-- Hero Section -->
+    <section class="text-center mb-12 animate-fade-in">
+      <h2 class="text-4xl md:text-5xl font-bold mb-4">
+        <span class="bg-gradient-to-r from-accent-purple via-accent-pink to-accent-cyan bg-clip-text text-transparent">
+          Visualize CPU Scheduling
+        </span>
+      </h2>
+      <p class="text-zinc-400 text-lg max-w-2xl mx-auto">
+        Explore different scheduling algorithms with interactive Gantt charts and real-time performance metrics
+      </p>
+    </section>
+
     <!-- Input Section -->
-    <section id="input-section" class="mb-8">
+    <section id="input-section" class="mb-10">
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <!-- Process Input Card -->
-        <div class="bg-dark-800 rounded-2xl p-6 border border-dark-600/50 shadow-xl">
-          <h2 class="text-lg font-semibold mb-4 flex items-center gap-2">
-            <span class="w-2 h-2 rounded-full bg-accent-secondary animate-pulse"></span>
-            Add Process
-          </h2>
-          <form id="process-form" class="space-y-4">
+        <div class="glass-card p-8 animate-fade-in delay-100">
+          <div class="section-title">
+            <span class="section-dot cyan"></span>
+            <h3>Add Process</h3>
+          </div>
+          <form id="process-form" class="space-y-5">
             <div class="grid grid-cols-2 gap-4">
               <div>
-                <label for="process-id" class="block text-sm font-medium text-gray-400 mb-1">Process ID</label>
+                <label for="process-id" class="input-label">Process ID</label>
                 <input type="text" id="process-id" readonly
-                  class="w-full bg-dark-700 border border-dark-600 rounded-lg px-4 py-2.5 text-gray-300 focus:outline-none focus:ring-2 focus:ring-accent-primary/50 transition-all"
-                  value="P1">
+                  class="input-field bg-white/5 text-zinc-400 cursor-not-allowed" value="P1">
               </div>
-              <div>
-                <label for="priority" class="block text-sm font-medium text-gray-400 mb-1">Priority</label>
-                <input type="number" id="priority" min="1" placeholder="1 (highest)"
-                  class="w-full bg-dark-700 border border-dark-600 rounded-lg px-4 py-2.5 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-accent-primary/50 transition-all">
+              <div id="priority-container" class="hidden">
+                <label for="priority" class="input-label">Priority</label>
+                <input type="number" id="priority" min="1" placeholder="1 = highest" class="input-field">
               </div>
             </div>
             <div class="grid grid-cols-2 gap-4">
               <div>
-                <label for="arrival-time" class="block text-sm font-medium text-gray-400 mb-1">Arrival Time</label>
-                <input type="number" id="arrival-time" min="0" placeholder="0" required
-                  class="w-full bg-dark-700 border border-dark-600 rounded-lg px-4 py-2.5 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-accent-primary/50 transition-all">
+                <label for="arrival-time" class="input-label">Arrival Time</label>
+                <input type="number" id="arrival-time" min="0" placeholder="0" required class="input-field">
               </div>
               <div>
-                <label for="burst-time" class="block text-sm font-medium text-gray-400 mb-1">Burst Time</label>
-                <input type="number" id="burst-time" min="1" placeholder="1" required
-                  class="w-full bg-dark-700 border border-dark-600 rounded-lg px-4 py-2.5 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-accent-primary/50 transition-all">
+                <label for="burst-time" class="input-label">Burst Time</label>
+                <input type="number" id="burst-time" min="1" placeholder="1" required class="input-field">
               </div>
             </div>
-            <button type="submit"
-              class="w-full bg-gradient-to-r from-accent-primary to-accent-tertiary text-white font-semibold py-3 rounded-xl hover:opacity-90 hover:shadow-lg hover:shadow-accent-primary/25 transition-all duration-300 flex items-center justify-center gap-2">
+            <!-- MLQ Hint -->
+            <div id="mlq-hint" class="hidden hint-box">
+              <p>
+                <span class="hint-title">📋 MLQ Priority Groups:</span><br>
+                • <span class="text-rose-400">Priority 1-2:</span> System Queue (RR, q=2)<br>
+                • <span class="text-amber-400">Priority 3-4:</span> Interactive Queue (RR, q=4)<br>
+                • <span class="text-blue-400">Priority 5+:</span> Batch Queue (FCFS)
+              </p>
+            </div>
+            <button type="submit" class="btn-primary btn-gradient-purple">
               <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
               </svg>
@@ -115,149 +143,208 @@
         </div>
 
         <!-- Algorithm Selection Card -->
-        <div class="bg-dark-800 rounded-2xl p-6 border border-dark-600/50 shadow-xl">
-          <h2 class="text-lg font-semibold mb-4 flex items-center gap-2">
-            <span class="w-2 h-2 rounded-full bg-accent-primary animate-pulse"></span>
-            Algorithm Selection
-          </h2>
-          <div class="space-y-4">
+        <div class="glass-card p-8 animate-fade-in delay-200">
+          <div class="section-title">
+            <span class="section-dot purple"></span>
+            <h3>Algorithm Selection</h3>
+          </div>
+          <div class="space-y-5">
             <div>
-              <label for="algorithm" class="block text-sm font-medium text-gray-400 mb-1">Scheduling Algorithm</label>
-              <select id="algorithm"
-                class="w-full bg-dark-700 border border-dark-600 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:ring-2 focus:ring-accent-primary/50 transition-all cursor-pointer">
+              <label for="algorithm" class="input-label">Scheduling Algorithm</label>
+              <select id="algorithm" class="select-field">
                 <option value="fcfs">First Come First Serve (FCFS)</option>
                 <option value="sjf-np">Shortest Job First (Non-Preemptive)</option>
-                <option value="sjf-p">Shortest Job First (Preemptive - SRTF)</option>
+                <option value="sjf-p">Shortest Remaining Time First (SRTF)</option>
                 <option value="rr">Round Robin</option>
                 <option value="priority-np">Priority (Non-Preemptive)</option>
                 <option value="priority-p">Priority (Preemptive)</option>
+                <option value="mlq">Multilevel Queue (MLQ)</option>
               </select>
             </div>
             <div id="quantum-container" class="hidden">
-              <label for="time-quantum" class="block text-sm font-medium text-gray-400 mb-1">Time Quantum</label>
-              <input type="number" id="time-quantum" min="1" value="2"
-                class="w-full bg-dark-700 border border-dark-600 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:ring-2 focus:ring-accent-primary/50 transition-all">
+              <label for="time-quantum" class="input-label">Time Quantum</label>
+              <input type="number" id="time-quantum" min="1" value="2" class="input-field">
             </div>
-            <div class="flex gap-3 pt-2">
-              <button id="calculate-btn"
-                class="flex-1 bg-gradient-to-r from-accent-secondary to-cyan-500 text-dark-900 font-semibold py-3 rounded-xl hover:opacity-90 hover:shadow-lg hover:shadow-accent-secondary/25 transition-all duration-300">
+            <div class="grid grid-cols-2 gap-4">
+              <button id="calculate-btn" class="btn-primary btn-gradient-cyan">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M13 10V3L4 14h7v7l9-11h-7z" />
+                </svg>
                 Calculate
               </button>
-              <button id="reset-btn"
-                class="px-6 bg-dark-700 border border-dark-600 text-gray-300 font-semibold py-3 rounded-xl hover:bg-dark-600 hover:text-white transition-all duration-300">
-                Reset
+              <button id="compare-btn" class="btn-primary btn-gradient-amber">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                </svg>
+                Compare
               </button>
             </div>
+            <button id="reset-btn" class="btn-primary btn-ghost">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+              </svg>
+              Reset All
+            </button>
           </div>
         </div>
       </div>
     </section>
 
     <!-- Process Queue Section -->
-    <section id="queue-section" class="mb-8">
-      <div class="bg-dark-800 rounded-2xl p-6 border border-dark-600/50 shadow-xl">
-        <div class="flex items-center justify-between mb-4">
-          <h2 class="text-lg font-semibold flex items-center gap-2">
-            <span class="w-2 h-2 rounded-full bg-yellow-400"></span>
-            Process Queue
-          </h2>
-          <span id="process-count" class="text-sm text-gray-400">0 processes</span>
+    <section id="queue-section" class="mb-10 animate-fade-in delay-300">
+      <div class="glass-card p-8">
+        <div class="flex items-center justify-between mb-6">
+          <div class="section-title mb-0">
+            <span class="section-dot amber"></span>
+            <h3>Process Queue</h3>
+          </div>
+          <span id="process-count" class="text-sm text-zinc-500 bg-white/5 px-4 py-1.5 rounded-full">0 processes</span>
         </div>
         <div id="process-queue" class="flex flex-wrap gap-3 min-h-[60px]">
-          <p id="empty-queue-msg" class="text-gray-500 text-sm italic">No processes added yet. Add a process above to
-            get started.</p>
+          <p id="empty-queue-msg" class="text-zinc-500 text-sm italic flex items-center gap-2">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            No processes added yet. Add a process above to get started.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Comparison Section -->
+    <section id="comparison-section" class="mb-10 hidden">
+      <div class="glass-card p-8 overflow-hidden">
+        <div class="section-title">
+          <span class="section-dot pink"></span>
+          <h3>Algorithm Comparison</h3>
+          <span
+            class="text-xs text-zinc-500 font-normal ml-2 bg-emerald-500/10 text-emerald-400 px-2 py-1 rounded-full">Best
+            values highlighted</span>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Algorithm</th>
+                <th>Avg. Waiting Time</th>
+                <th>Avg. Turnaround Time</th>
+                <th>CPU Utilization</th>
+                <th>Throughput</th>
+              </tr>
+            </thead>
+            <tbody id="comparison-table-body">
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- MLQ Info Section -->
+    <section id="mlq-info-section" class="mb-10 hidden">
+      <div class="glass-card p-8">
+        <div class="section-title">
+          <span class="section-dot purple"></span>
+          <h3>Multilevel Queue Structure</h3>
+        </div>
+        <div id="mlq-queues">
+          <!-- Queue info will be rendered here -->
         </div>
       </div>
     </section>
 
     <!-- Gantt Chart Section -->
-    <section id="gantt-section" class="mb-8 hidden">
-      <div class="bg-dark-800 rounded-2xl p-6 border border-dark-600/50 shadow-xl">
-        <h2 class="text-lg font-semibold mb-4 flex items-center gap-2">
-          <span class="w-2 h-2 rounded-full bg-green-400"></span>
-          Gantt Chart
-        </h2>
+    <section id="gantt-section" class="mb-10 hidden">
+      <div class="glass-card p-8">
+        <div class="section-title">
+          <span class="section-dot emerald"></span>
+          <h3>Gantt Chart</h3>
+        </div>
         <div id="gantt-container" class="overflow-x-auto pb-4">
-          <div id="gantt-chart" class="flex min-w-max"></div>
-          <div id="gantt-timeline" class="flex min-w-max mt-1"></div>
+          <div id="gantt-chart" class="flex min-w-max gap-1"></div>
+          <div id="gantt-timeline" class="flex min-w-max mt-2"></div>
         </div>
       </div>
     </section>
 
     <!-- Results Table Section -->
-    <section id="table-section" class="mb-8 hidden">
-      <div class="bg-dark-800 rounded-2xl p-6 border border-dark-600/50 shadow-xl overflow-x-auto">
-        <h2 class="text-lg font-semibold mb-4 flex items-center gap-2">
-          <span class="w-2 h-2 rounded-full bg-purple-400"></span>
-          Process Details
-        </h2>
-        <table class="w-full text-left">
-          <thead>
-            <tr class="border-b border-dark-600">
-              <th class="py-3 px-4 text-sm font-semibold text-gray-400">Process</th>
-              <th class="py-3 px-4 text-sm font-semibold text-gray-400">Arrival Time</th>
-              <th class="py-3 px-4 text-sm font-semibold text-gray-400">Burst Time</th>
-              <th class="py-3 px-4 text-sm font-semibold text-gray-400">Priority</th>
-              <th class="py-3 px-4 text-sm font-semibold text-gray-400">Completion Time</th>
-              <th class="py-3 px-4 text-sm font-semibold text-gray-400">Turnaround Time</th>
-              <th class="py-3 px-4 text-sm font-semibold text-gray-400">Waiting Time</th>
-            </tr>
-          </thead>
-          <tbody id="results-table-body">
-          </tbody>
-        </table>
+    <section id="table-section" class="mb-10 hidden">
+      <div class="glass-card p-8 overflow-hidden">
+        <div class="section-title">
+          <span class="section-dot cyan"></span>
+          <h3>Process Details</h3>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Process</th>
+                <th>Arrival Time</th>
+                <th>Burst Time</th>
+                <th id="priority-header" class="hidden">Priority</th>
+                <th>Completion Time</th>
+                <th>Turnaround Time</th>
+                <th>Waiting Time</th>
+              </tr>
+            </thead>
+            <tbody id="results-table-body">
+            </tbody>
+          </table>
+        </div>
       </div>
     </section>
 
     <!-- Analytics Section -->
     <section id="analytics-section" class="hidden">
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div class="bg-gradient-to-br from-dark-800 to-dark-700 rounded-2xl p-6 border border-dark-600/50 shadow-xl">
-          <div class="flex items-center gap-4">
-            <div
-              class="w-14 h-14 rounded-xl bg-gradient-to-br from-accent-secondary/20 to-cyan-500/20 flex items-center justify-center">
-              <svg class="w-7 h-7 text-accent-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
-            </div>
-            <div>
-              <p class="text-sm text-gray-400 mb-1">Average Waiting Time</p>
-              <p id="avg-wt"
-                class="text-3xl font-bold bg-gradient-to-r from-accent-secondary to-cyan-400 bg-clip-text text-transparent">
-                0.00</p>
-            </div>
+        <div class="stat-card">
+          <div class="stat-icon cyan">
+            <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
           </div>
+          <p class="stat-label">Average Waiting Time</p>
+          <p id="avg-wt" class="stat-value">0.00</p>
         </div>
-        <div class="bg-gradient-to-br from-dark-800 to-dark-700 rounded-2xl p-6 border border-dark-600/50 shadow-xl">
-          <div class="flex items-center gap-4">
-            <div
-              class="w-14 h-14 rounded-xl bg-gradient-to-br from-accent-primary/20 to-accent-tertiary/20 flex items-center justify-center">
-              <svg class="w-7 h-7 text-accent-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-              </svg>
-            </div>
-            <div>
-              <p class="text-sm text-gray-400 mb-1">Average Turnaround Time</p>
-              <p id="avg-tat"
-                class="text-3xl font-bold bg-gradient-to-r from-accent-primary to-accent-tertiary bg-clip-text text-transparent">
-                0.00</p>
-            </div>
+        <div class="stat-card">
+          <div class="stat-icon purple">
+            <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+            </svg>
           </div>
+          <p class="stat-label">Average Turnaround Time</p>
+          <p id="avg-tat" class="stat-value purple">0.00</p>
         </div>
       </div>
     </section>
   </main>
 
   <!-- Footer -->
-  <footer class="bg-dark-800/50 border-t border-dark-600/50 mt-12">
-    <div class="max-w-7xl mx-auto px-4 py-6 text-center text-gray-500 text-sm">
-      <p>Built with ❤️ for Operating Systems Education</p>
+  <footer class="mt-20">
+    <div class="footer-gradient"></div>
+    <div class="max-w-7xl mx-auto px-6 py-8">
+      <div class="flex flex-col md:flex-row items-center justify-between gap-4">
+        <p class="text-zinc-500 text-sm">
+          Built with ❤️ for Operating Systems Education
+        </p>
+        <div class="flex items-center gap-6">
+          <a href="https://github.com/MR-Seven-7/cpu-scheduling-visualizer" target="_blank"
+            class="text-zinc-500 hover:text-accent-purple transition-colors text-sm">
+            View Source
+          </a>
+          <span class="text-zinc-700">•</span>
+          <p class="text-zinc-600 text-sm">©️ 2024</p>
+        </div>
+      </div>
     </div>
   </footer>
 
-  <script type="module" src="./src/main.js"></script>
+  <script type="module" src="/src/main.js"></script>
 </body>
 
 </html>
